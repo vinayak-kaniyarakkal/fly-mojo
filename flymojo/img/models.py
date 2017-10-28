@@ -71,7 +71,7 @@ class MasterFeedBack(models.Model):
     kyc = models.ForeignKey('Kyc')
 
     def __str__(self):
-        return '%s-%s' % (str(self.merchant), str(self.kyc))
+        return '%s-%s' % (str(self.moderator), str(self.kyc))
 
 
 class FeedBack(models.Model):
@@ -83,4 +83,4 @@ class FeedBack(models.Model):
     field = models.IntegerField(choices=FIELD_CHOICES)
 
     def __str__(self):
-        return '%s-%s-%s' % (str(self.master), str(self.action), str(self.field))
+        return '%s-%s-%s' % (str(self.master), str(self.action), str(self.get_field_display()))
