@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.static import serve
-from img.views import CreateToken, image_upload, get_images
 import settings
 
 

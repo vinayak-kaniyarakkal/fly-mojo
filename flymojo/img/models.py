@@ -59,7 +59,7 @@ class MasterFeedBack(models.Model):
 class FeedBack(models.Model):
     FIELD_CHOICES = ((0, 'Name'), (1, 'Pan No'),
                       (2, 'dob'))
-    master = model.ForeignKey('MasterFeedBack')
-    action = model.ForeignKey('Action')
+    master = models.ForeignKey('MasterFeedBack')
+    action = models.ForeignKey('Action')
     old_info = models.CharField(max_length=100)
     field = models.IntegerField(choices=FIELD_CHOICES)
