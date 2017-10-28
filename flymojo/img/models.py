@@ -43,6 +43,9 @@ class Moderator(models.Model):
 class Merchant(models.Model):
     user = models.ForeignKey('auth.User')
 
+    def __str__(self):
+        return str(self.user)
+
 
 class Action(models.Model):
     ACTION_CHOICES = ((0,'Nothing'), (1, 'Correct'),
