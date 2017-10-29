@@ -97,11 +97,11 @@ $(document).ready(function(){
     $('.fileUpload').change(function(e){
         var file = $(this)[0].files[0];
         file = new UploadHandler(file);
-        file.doUpload(function(){
+        file.doUpload(function(data){
             $(body.uploadBox.$element).remove();
-            animateNext(file.getName());
+            animateNext(file.getName(),data);
         });
-        animateNext('2048cutemonstersdribble.jpg');
+        //animateNext('2048cutemonstersdribble.jpg');
     });
 
     var checkBtnFn = function(elm,fn){
@@ -111,24 +111,30 @@ $(document).ready(function(){
                 $(elm).removeClass('ok');
                 $(elm).text('');
                 fn(false);
+                point -= 1;
             }else{
                 $(elm).addClass('ok');
                 $(elm).text('done');
-                fn(true)
+                fn(true);
+                point += 1;
             }
         });
     }
 
+    var point = 0;
     var FBdata = {
         name:{
             value:undefined,
-            mark:false
+            mark:false,
+            change:false
         },birth_date:{
             value:undefined,
-            mark:false
+            mark:false,
+            change:false
         },pan_no:{
             value:undefined,
-            mark:false
+            mark:false,
+            change:false
         }
     };
 
@@ -162,14 +168,23 @@ $(document).ready(function(){
         });
     }
 
-    function animateNext(name) {
+    function animateNext(name,data) {
         $(body.uploadBox.$element).addClass('go');
         setTimeout(function(){
-            stepTwo(name);
+            stepTwo(name,data);
         },200);
     }
 
-    function stepTwo(name) {
+    function stepTwo(name,data) {
+        //console.log(data.info);
+        //console.log(data.info.image);
+
+        FBdata.name.value = data.info.name;
+        FBdata.birth_date.value = data.info.dob;
+        FBdata.pan_no.value = data.info.pan_no;
+
+        console.log(data);
+
         $(document.body).html('');
         var div = $(document.body).tags({
             '.uploadBox':{
@@ -187,7 +202,7 @@ $(document).ready(function(){
                 '.imgurl':{
                     $:{
                         css:{
-                            'background-image':'url("./img/'+name+'")'
+                            'background-image':'url("'+data.info.image+'")'
                         }
                     }
                 },'.line':{
@@ -198,10 +213,14 @@ $(document).ready(function(){
                     },
                     'input':{
                         $: {
-                            val: 'Kishan Devani',
+                            val: FBdata.name.value,
                             each: function (elm) {
                                 $(elm).on('input propertychange paste', function () {
                                     FBdata.name.value = $(this).val();
+                                    if(FBdata.name.change == false){
+                                        FBdata.name.change = true;
+                                        point += 1;
+                                    }
                                 });
                             }
                         }
@@ -222,10 +241,14 @@ $(document).ready(function(){
                 },'.line.a':{
                     'input':{
                         $: {
-                            val: '10/12/2017',
+                            val: FBdata.birth_date.value,
                             each: function (elm) {
                                 $(elm).on('input propertychange paste', function () {
-                                    FBdata.name.value = $(this).val();
+                                    FBdata.birth_date.value = $(this).val();
+                                    if(FBdata.birth_date.change == false){
+                                        FBdata.birth_date.change = true;
+                                        point += 1;
+                                    }
                                 });
                             }
                         }
@@ -246,10 +269,14 @@ $(document).ready(function(){
                 },'.line.b':{
                     'input':{
                         $:{
-                            val: '895 68 959 68',
+                            val: FBdata.pan_no.value,
                             each: function (elm) {
                                 $(elm).on('input propertychange paste', function () {
-                                    FBdata.name.value = $(this).val();
+                                    FBdata.pan_no.value = $(this).val();
+                                    if(FBdata.pan_no.change == false){
+                                        FBdata.pan_no.change = true;
+                                        point += 1;
+                                    }
                                 });
                             }
                         }
@@ -333,7 +360,7 @@ $(document).ready(function(){
                 },
                 '.doneText':{
                     $:{
-                        text:'Submitted Successfully.'
+                        text:'Submitted Successfully with ' + point  + ' points.'
                     }
                 }
             }

@@ -29,5 +29,5 @@ def image_upload(request):
     
     return JsonResponse({'success': True, 'info': {
         'name': kyc.name, 'dob': kyc.dob,
-        'pan_no': kyc.pan_no, 'image': kyc.image.url
+        'pan_no': kyc.pan_no, 'image': '/media/%s' % kyc.image.url
     }})
