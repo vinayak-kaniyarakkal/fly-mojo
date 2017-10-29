@@ -23,10 +23,10 @@ class Base(models.Model):
 
 class Kyc(Base):
     merchant = models.ForeignKey('Merchant')
-
+    
     name = models.CharField(max_length=100, **OPTIONAL)
     pan_no = models.CharField(max_length=100, **OPTIONAL)
-    dob = models.DateField(**OPTIONAL)
+    dob = models.CharField(max_length=20, **OPTIONAL)
 
     image = models.ImageField()
     confidence_level = models.IntegerField()
@@ -45,7 +45,7 @@ class Kyc(Base):
             from django.conf import settings
             import os
             path = os.path.join(settings.MEDIA_ROOT, self.image.url)
-            # res = process_image(path)
+            res = process_image(path)
             res = {'name': 'Vinayak', 'dob': '1991-08-29', 'pan_no': '32412312'}
             self.__dict__.update(res)
             self.save()
@@ -85,7 +85,7 @@ class MasterFeedBack(models.Model):
     kyc = models.ForeignKey('Kyc')
 
     def __str__(self):
-        return '%s-%s' % (str(self.merchant), str(self.kyc))
+        return '%s-%s' % (str(self.moderator), str(self.kyc))
 
 
 class FeedBack(models.Model):
@@ -97,4 +97,4 @@ class FeedBack(models.Model):
     field = models.IntegerField(choices=FIELD_CHOICES)
 
     def __str__(self):
-        return '%s-%s-%s' % (str(self.master), str(self.action), str(self.field))
+        return '%s-%s-%s' % (str(self.master), str(self.action), str(self.get_field_display()))

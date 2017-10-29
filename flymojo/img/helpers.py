@@ -57,8 +57,7 @@ def process_image(img_file_name):
             x, y, w, h = x - 4, y - 4, w + 8, h + 8
             bounding_boxes2.append((center, (x, y, w, h)))
             cv2.rectangle(img_contours2, (x, y), (x + w, y + h), 200, -1)
-            contour_cropped = cropped_img[y:(y + h), x:(x + w)]
-            import pdb; pdb.set_trace()
+            contour_cropped = cropped_img[y:(y + h), x:(x + w)] 
             if recognize_pan_data(contour_cropped):
                 recognized_params.append(recognize_pan_data(contour_cropped))
 
@@ -75,5 +74,10 @@ def process_image(img_file_name):
 
     return pan_data
 
+<<<<<<< HEAD
+#img_file_name = r'C:/Users/Amayaranjan_das/Desktop/Hack-a-mojo/1509250289_tmp_2017-10-28.jpg'  # 'sample-test-PAN2.jpg'
+#print process_image(img_file_name)
+=======
 img_file_name = r'C:\Users\37946\Desktop\Vinayak\rnd\flymojo\flymojo\img\sample-test-PAN5.jpg'  # 'sample-test-PAN2.jpg'
 # print process_image(img_file_name)
+>>>>>>> e46290f15870708b92ca3ebdc84a1f2f56b6105e
