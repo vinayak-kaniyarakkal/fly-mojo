@@ -26,7 +26,7 @@ class Kyc(Base):
     
     name = models.CharField(max_length=100, **OPTIONAL)
     pan_no = models.CharField(max_length=100, **OPTIONAL)
-    dob = models.DateField(**OPTIONAL)
+    dob = models.CharField(max_length=20, **OPTIONAL)
 
     image = models.ImageField()
     confidence_level = models.IntegerField()
