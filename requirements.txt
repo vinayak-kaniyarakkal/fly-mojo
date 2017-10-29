@@ -1,3 +1,5 @@
 Django==1.10.3
 djangorestframework
 Pillow
+opencv-python
+pytesseract

@@ -76,4 +76,4 @@ def process_image(img_file_name):
     return pan_data
 
 img_file_name = r'C:\Users\37946\Desktop\Vinayak\rnd\flymojo\flymojo\img\sample-test-PAN5.jpg'  # 'sample-test-PAN2.jpg'
-print process_image(img_file_name)
+# print process_image(img_file_name)

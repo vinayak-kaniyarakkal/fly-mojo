@@ -28,6 +28,6 @@ def image_upload(request):
     kyc = form.save()
     
     return JsonResponse({'success': True, 'info': {
-        'name': kyc, 'dob': kyc.dob,
+        'name': kyc.name, 'dob': kyc.dob,
         'pan_no': kyc.pan_no, 'image': kyc.image.url
     }})

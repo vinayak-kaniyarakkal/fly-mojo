@@ -44,10 +44,9 @@ class Kyc(Base):
             from helpers import process_image
             from django.conf import settings
             import os
-            import pdb; pdb.set_trace()
             path = os.path.join(settings.MEDIA_ROOT, self.image.url)
             # res = process_image(path)
-            res = {'name': 'Vinayak', 'dob': '29/08/1991', 'pan_no': '32412312'}
+            res = {'name': 'Vinayak', 'dob': '1991-08-29', 'pan_no': '32412312'}
             self.__dict__.update(res)
             self.save()
         return self
