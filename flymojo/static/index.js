@@ -1,17 +1,18 @@
-var Upload = function (file) {
+var UploadHandler = function (file) {
     this.file = file;
 };
 
-Upload.prototype.getType = function() {
+UploadHandler.prototype.getType = function() {
     return this.file.type;
 };
-Upload.prototype.getSize = function() {
+UploadHandler.prototype.getSize = function() {
     return this.file.size;
 };
-Upload.prototype.getName = function() {
+UploadHandler.prototype.getName = function() {
     return this.file.name;
 };
-Upload.prototype.doUpload = function (fn) {
+
+UploadHandler.prototype.doUpload = function (fn) {
     var that = this;
     var formData = new FormData();
 
@@ -47,7 +48,7 @@ Upload.prototype.doUpload = function (fn) {
     });
 };
 
-Upload.prototype.progressHandling = function (event) {
+UploadHandler.prototype.progressHandling = function (event) {
     var percent = 0;
     var position = event.loaded || event.position;
     var total = event.total;
@@ -64,6 +65,14 @@ $(document).ready(function(){
 
     var body = $(document.body).tags({
         '.uploadBox':{
+            $:{
+                each:function(elm) {
+                    $(elm).addClass('hide');
+                    setTimeout(function(){
+                        $(elm).removeClass('hide');
+                    },200);
+                }
+            },
             '.imgBox':{},
             '.img.material-icons':{
                 $:{
@@ -71,7 +80,7 @@ $(document).ready(function(){
                 }
             },'.btn':{
                 $:{
-                    text:'Upload Pan Image'
+                    text:'Upload Pancard Image'
                 },
                 'input.fileUpload':{
                     $:{
@@ -87,17 +96,94 @@ $(document).ready(function(){
 
     $('.fileUpload').change(function(e){
         var file = $(this)[0].files[0];
-        file = new Upload(file);
+        file = new UploadHandler(file);
         file.doUpload(function(){
             $(body.uploadBox.$element).remove();
-            stepTwo(file.getName());
+            animateNext(file.getName());
         });
+        animateNext('2048cutemonstersdribble.jpg');
     });
 
+    var checkBtnFn = function(elm,fn){
+        $(elm).addClass('material-icons');
+        $(elm).click(function(){
+            if($(elm).hasClass('ok')){
+                $(elm).removeClass('ok');
+                $(elm).text('');
+                fn(false);
+            }else{
+                $(elm).addClass('ok');
+                $(elm).text('done');
+                fn(true)
+            }
+        });
+    }
+
+    var FBdata = {
+        name:{
+            value:undefined,
+            mark:false
+        },birth_date:{
+            value:undefined,
+            mark:false
+        },pan_no:{
+            value:undefined,
+            mark:false
+        }
+    };
+
+    function sendFeedback(){
+        console.log(FBdata);
+        var formData = new FormData();
+        formData.append("FBdata", JSON.stringify(FBdata));
+        $.ajax({
+            type: "POST",
+            url: "/sendFeedback/",
+            xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+                    myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                }
+                return myXhr;
+            },
+            success: function (data) {
+                // your callback here
+                fn(data);
+            },
+            error: function (error) {
+                // handle error
+            },
+            async: true,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 60000
+        });
+    }
+
+    function animateNext(name) {
+        $(body.uploadBox.$element).addClass('go');
+        setTimeout(function(){
+            stepTwo(name);
+        },200);
+    }
 
     function stepTwo(name) {
-        $(document.body).tags({
+        $(document.body).html('');
+        var div = $(document.body).tags({
             '.uploadBox':{
+                $:{
+                    each:function(elm) {
+                        $(elm).addClass('hide');
+                        setTimeout(function(){
+                            $(elm).removeClass('hide');
+                        },200);
+                    },
+                    css:{
+                        height:'648px'
+                    }
+                },
                 '.imgurl':{
                     $:{
                         css:{
@@ -110,34 +196,151 @@ $(document).ready(function(){
                             'margin-top':'25px'
                         }
                     },
-                    'input':{},
+                    'input':{
+                        $: {
+                            val: 'Kishan Devani',
+                            each: function (elm) {
+                                $(elm).on('input propertychange paste', function () {
+                                    FBdata.name.value = $(this).val();
+                                });
+                            }
+                        }
+                    },
                     '.name':{
                         $:{
                             text:'Name'
                         }
-                    },
+                    },'.check':{
+                        $:{
+                            each:function (elm) {
+                                new checkBtnFn(elm,function (val) {
+                                    FBdata.name.mark = val;
+                                });
+                            }
+                        }
+                    }
                 },'.line.a':{
-                    'input':{},
+                    'input':{
+                        $: {
+                            val: '10/12/2017',
+                            each: function (elm) {
+                                $(elm).on('input propertychange paste', function () {
+                                    FBdata.name.value = $(this).val();
+                                });
+                            }
+                        }
+                    },
                     '.name':{
                         $:{
                             text:'Birth Date'
                         }
-                    },
+                    },'.check':{
+                        $:{
+                            each:function (elm) {
+                                new checkBtnFn(elm,function (val) {
+                                    FBdata.birth_date.mark = val;
+                                });
+                            }
+                        }
+                    }
                 },'.line.b':{
-                    'input':{},
+                    'input':{
+                        $:{
+                            val: '895 68 959 68',
+                            each: function (elm) {
+                                $(elm).on('input propertychange paste', function () {
+                                    FBdata.name.value = $(this).val();
+                                });
+                            }
+                        }
+                    },
                     '.name':{
                         $:{
                             text:'Pan No.'
                         }
+                    },'.check':{
+                        $:{
+                            each:function (elm) {
+                                new checkBtnFn(elm,function (val) {
+                                    FBdata.pan_no.mark = val;
+                                });
+                            }
+                        }
+                    }
+                },'.line.c':{
+                    $:{
+                        css:{
+                            height:'auto'
+                        }
                     },
+                    '.note':{
+                        'span.material-icons':{
+                            $:{
+                                text:'info'
+                            }
+                        },'span':{
+                            $:{
+                                text:'Tap on mark if field value is correct or edit it.'
+                            }
+                        }
+                    }
                 },'.btn':{
                     $:{
-                        text:'Submit'
+                        text:'Submit',
+                        each:function(elm){
+                            $(elm).click(function(){
+                                $(div.uploadBox.$element).addClass('go');
+                                setTimeout(function(){
+                                    $(document.body).html('');
+                                    done();
+                                },200);
+                            });
+                        }
                     }
                 }
             }
         });
     }
 
-    //stepTwo('2048cutemonstersdribble.jpg');
+    function done(){
+        var body = $(document.body).tags({
+            '.uploadBox':{
+                $:{
+                    each:function(elm) {
+                      $(elm).addClass('hide');
+                      setTimeout(function(){
+                            $(elm).removeClass('hide');
+                      },200);
+                    },
+                    css:{
+                        height:'200px',
+                        overflow:'visible'
+                    }
+                },
+                '.imgBox':{
+                    $:{
+                        css:{
+                            height:'100%'
+                        }
+                    },'.img.material-icons':{
+                        $:{
+                            text:'done',
+                            css:{
+                                color:'#00CC66'
+                            }
+                        }
+                    }
+                },
+                '.doneText':{
+                    $:{
+                        text:'Submitted Successfully.'
+                    }
+                }
+            }
+        });
+    }
+
+    //animateNext('2048cutemonstersdribble.jpg');
+
+
 });
