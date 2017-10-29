@@ -37,6 +37,20 @@ class Kyc(Base):
     def __str__(self):
         return str(self.merchant)
 
+    def save(self):
+        flag = not self.pk
+        super(Kyc, self).save()
+        if flag:
+            from helpers import process_image
+            from django.conf import settings
+            import os
+            path = os.path.join(settings.MEDIA_ROOT, self.image.url)
+            res = process_image(path)
+            res = {'name': 'Vinayak', 'dob': '1991-08-29', 'pan_no': '32412312'}
+            self.__dict__.update(res)
+            self.save()
+        return self
+
 
 class Moderator(models.Model):
     user = models.ForeignKey('auth.User')
