@@ -18,7 +18,6 @@ def get_pan_details(request):
 def get_leaderboard(request):
  	leaders = [{'name' : str(each), 'points' : each.get_points(), 'rank' : rank+1 }
  				for (rank, each) in enumerate(sorted(Moderator.objects.all(), key=lambda m: -m.get_points())[:10])]
- 	print request
 	# leaders = []
 	# rank = 0 
 	# for (rank, each) in enumerate(sorted(Moderator.objects.all(), key=lambda m: m.get_points())[:10]):

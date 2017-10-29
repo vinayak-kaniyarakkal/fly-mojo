@@ -23,7 +23,7 @@ class Base(models.Model):
 
 class Kyc(Base):
     merchant = models.ForeignKey('Merchant')
-
+    
     name = models.CharField(max_length=100, **OPTIONAL)
     pan_no = models.CharField(max_length=100, **OPTIONAL)
     dob = models.DateField(**OPTIONAL)
